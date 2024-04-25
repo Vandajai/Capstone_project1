@@ -1,0 +1,11 @@
+login as: ubuntu
+ubuntu@ip-172-31-66-212:~$ sudo apt update
+ubuntu@ip-172-31-66-212:~$ sudo apt install python3-pip
+ubuntu@ip-172-31-66-212:~$ sudo apt install git
+ubuntu@ip-172-31-66-212:~$ git clone "https://github.com/Vandajai/Capstone_project1.git"
+ubuntu@ip-172-31-66-212:~$ cd Capstone_project1
+ubuntu@ip-172-31-66-212:~/Capstone_project1$ pip install -r requirements.txt
+ubuntu@ip-172-31-66-212:~/Capstone_project1$ ls
+ubuntu@ip-172-31-66-212:~/Capstone_project1$ ls -la
+ubuntu@ip-172-31-66-212:~/Capstone_project1$ python3 -m streamlit run app.py
+

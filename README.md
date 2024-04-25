@@ -10,7 +10,7 @@ YOLOv8
 Streamlit
 
 ```bash
-pip install ultralytics streamlit pytube
+pip install ultralytics streamlit 
 ```
 
 ## Installation
@@ -39,7 +39,7 @@ One the model config is done, select a source.
 - Select a source. (radio button selection `Image`).
 - Upload an image by clicking on the "Browse files" button.
 - Click the "Detect Objects" button to run the object detection algorithm on the uploaded image with the selected confidence threshold.
-- The resulting image with objects detected will be displayed on the page. Click the "Download Image" button to download the image.("If save image to download" is selected)
+- The resulting image with objects detected will be displayed on the page. 
 
 
 
