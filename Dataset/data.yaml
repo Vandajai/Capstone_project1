@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 37
+names: ['Aluminium_foil', 'Background', 'Cardboard', 'Cig_bud', 'Cig_pack', 'Disposable', 'E-Waste', 'Foam Paper', 'Foam cups and plates', 'Garbage', 'Glass_bottle', 'Light bulbs', 'Mask', 'Metal', 'Nylog_sting', 'Nylon_sting', 'Papar_Cup', 'Paper', 'Plastic', 'Plastic_Bag', 'Plastic_Container', 'Plastic_Glass', 'Plastic_Straw', 'Plastic_bottle', 'Plastic_tray', 'Plastic_wraper', 'Rubber', 'Steel_Bottle', 'Tetrapack', 'Thermocol', 'Toothpaste', 'can', 'contaminated_waste', 'diaper_sanitarypad', 'tin_box', 'top_view_waste', 'wood']
+
+roboflow:
+  workspace: capstoneproject-xockj
+  project: wastesegment_combineddataset5
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/capstoneproject-xockj/wastesegment_combineddataset5/dataset/1
