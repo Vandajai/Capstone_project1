@@ -15,7 +15,7 @@ pip install ultralytics streamlit pytube
 
 ## Installation
 
-- Clone the repository: git clone <https://github.com/CodingMantras/yolov8-streamlit-detection-tracking.git>
+- Clone the repository: git clone <https://github.com/Vandajai/Capstone_project1.git>
 - Change to the repository directory: `cd yolov8-streamlit-detection-tracking`
 - Create `weights` and `images` directories inside the project.
 - Download the pre-trained YOLOv8 weights and save them to the `weights` directory in the same project.
