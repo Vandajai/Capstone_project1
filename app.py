@@ -9,55 +9,9 @@ import streamlit as st
 # Local Modules
 import settings
 import helper
-
-# Function to calculate the area of bounding boxes
-def calculate_area(boxes):
-    areas = []
-    for box in boxes:
-        x1, y1, x2, y2 = box[:4]
-        width = x2 - x1
-        height = y2 - y1
-        area = width * height
-        areas.append(area)
-    return areas
-
-# Function to calculate pixel counts from masks
-def calculate_pixel_counts(outputs, category_names):
-    total_pixels = 0
-    category_pixel_counts = {category: 0 for category in category_names}
-
-    for output in outputs:
-        masks = output.masks.data.cpu().numpy()  # Assuming 'masks' contains the segmentation masks
-        classes = output.boxes.cls.cpu().numpy()  # Assuming 'boxes.cls' contains the predicted classes
-
-        for mask, pred_class in zip(masks, classes):
-            mask_np = mask.astype(np.uint8)
-            mask_pixels = np.sum(mask_np)
-            total_pixels += mask_pixels
-            category_name = category_names[int(pred_class)]
-            category_pixel_counts[category_name] += mask_pixels
-
-    return total_pixels, category_pixel_counts
-
-# Function to compute percentages and generate summary
-def generate_summary(inference_results, category_names):
-    summaries = []
-
-    for image_path, outputs in inference_results:
-        total_pixels, category_pixel_counts = calculate_pixel_counts(outputs, category_names)
-
-        percentages = {cat: (count / total_pixels) * 100 for cat, count in category_pixel_counts.items()}
-
-        summary = {
-            "image_path": image_path,
-            "total_pixels": total_pixels,
-            "category_pixel_counts": category_pixel_counts,
-            "percentages": percentages
-        }
-
-        summaries.append(summary)
-
-    return summaries
+from helper import calculate_area
+from helper import calculate_pixel_counts
+from helper import generate_summary
 
 # 37 Categories
 category_names = ['Aluminium_foil', 'Background', 'Cardboard', 'Cig_bud', 'Cig_pack', 'Disposable', 'E-Waste', 'Foam Paper', 'Foam cups and plates', 'Garbage', 'Glass_bottle', 'Light bulbs', 'Mask', 'Metal', 'Nylog_sting', 'Nylon_sting', 'Papar_Cup', 'Paper', 'Plastic', 'Plastic_Bag', 'Plastic_Container', 'Plastic_Glass', 'Plastic_Straw', 'Plastic_bottle', 'Plastic_tray', 'Plastic_wraper', 'Rubber', 'Steel_Bottle', 'Tetrapack', 'Thermocol', 'Toothpaste', 'can', 'contaminated_waste', 'diaper_sanitarypad', 'tin_box', 'top_view_waste', 'wood']
