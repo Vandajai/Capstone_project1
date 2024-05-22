@@ -98,49 +98,54 @@ if source_radio == settings.IMAGE:
             if st.sidebar.button('Detect Waste'):
                 try:
                     res = model.predict(uploaded_image, conf=confidence)
-                    boxes = res[0].boxes.xyxy
-                    areas = calculate_area(boxes)
 
-                    # Filter out categories with zero pixel counts
-                    total_pixels, category_pixel_counts = calculate_pixel_counts(res, category_names)
-                    percentages = {cat: (count / total_pixels) * 100 for cat, count in category_pixel_counts.items()}
+                    # Check if no objects are detected
+                    if not res[0].boxes:
+                        st.warning("No objects were detected in the image.")
+                    else:
+                        boxes = res[0].boxes.xyxy
+                        areas = calculate_area(boxes)
 
-                    # Filter out categories with zero pixel counts
-                    non_zero_pixel_counts = {cat: count for cat, count in category_pixel_counts.items() if count > 0}
-                    non_zero_percentages = {cat: percent for cat, percent in percentages.items()  if percent > 0}
+                        # Filter out categories with zero pixel counts
+                        total_pixels, category_pixel_counts = calculate_pixel_counts(res, category_names)
+                        percentages = {cat: (count / total_pixels) * 100 for cat, count in category_pixel_counts.items()}
 
-                    # Calculate the total area of the image
-                    total_pixels = uploaded_image.width * uploaded_image.height
+                        # Filter out categories with zero pixel counts
+                        non_zero_pixel_counts = {cat: count for cat, count in category_pixel_counts.items() if count > 0}
+                        non_zero_percentages = {cat: percent for cat, percent in percentages.items() if percent > 0}
 
-                    # Calculate the area of each detected category
-                    areas = calculate_area(boxes)
-                    category_areas = {cat: area for cat, area in zip(non_zero_pixel_counts.keys(), areas)}
+                        # Calculate the total area of the image
+                        total_pixels = uploaded_image.width * uploaded_image.height
 
-                    # Ensure Garbage area is 100% and adjust other categories accordingly
-                    garbage_area = max(category_areas.get("Garbage", 1), max(category_areas.values()) * 1.2)  # Ensure garbage area is at least 1 and higher than others
-                    adjusted_category_areas = {cat: area / garbage_area * 100 if cat != "Garbage" else 100 for cat, area in category_areas.items()}
+                        # Calculate the area of each detected category
+                        areas = calculate_area(boxes)
+                        category_areas = {cat: area for cat, area in zip(non_zero_pixel_counts.keys(), areas)}
 
-                    # Create a list of tuples for each detected category with percentage and adjusted area
-                    adjusted_detected_results = []
-                    for cat, area in adjusted_category_areas.items():
-                        adjusted_detected_results.append((cat, f"{area:.0f}%", f"{area / 100 * total_pixels:.4f}"))
+                        # Ensure Garbage area is 100% and adjust other categories accordingly
+                        garbage_area = max(category_areas.get("Garbage", 1), max(category_areas.values()) * 1.2)  # Ensure garbage area is at least 1 and higher than others
+                        adjusted_category_areas = {cat: area / garbage_area * 100 if cat != "Garbage" else 100 for cat, area in category_areas.items()}
 
-                    # Sort the adjusted results by adjusted
-                    # Sort the results by area in descending order
-                    adjusted_detected_results.sort(key=lambda x: float(x[2]), reverse=True)
+                        # Create a list of tuples for each detected category with percentage and adjusted area
+                        adjusted_detected_results = []
+                        for cat, area in adjusted_category_areas.items():
+                            adjusted_detected_results.append((cat, f"{area:.0f}%", f"{area / 100 * total_pixels:.4f}"))
 
-                    # Display the detected image once for all categories
-                    detected_image = PIL.Image.fromarray(res[0].plot()[:, :, ::-1])
-                    detected_image_path = "detected_image.png"
-                    detected_image.save(detected_image_path)
-                    st.image(detected_image_path, caption="Detected Image", use_column_width=True)
+                        # Sort the adjusted results by adjusted
+                        # Sort the results by area in descending order
+                        adjusted_detected_results.sort(key=lambda x: float(x[2]), reverse=True)
 
-                    # Display the results in a table format below the image
-                    with st.expander("Detection Results"):
-                        results_df = pd.DataFrame(adjusted_detected_results, columns=["Metric", "In picture (%)", "Area (cm²)"])
-                        st.dataframe(results_df)
+                        # Display the detected image once for all categories
+                        detected_image = PIL.Image.fromarray(res[0].plot()[:, :, ::-1])
+                        detected_image_path = "detected_image.png"
+                        detected_image.save(detected_image_path)
+                        st.image(detected_image_path, caption="Detected Image", use_column_width=True)
 
-                    st.balloons()
+                        # Display the results in a table format below the image
+                        with st.expander("Detection Results"):
+                            results_df = pd.DataFrame(adjusted_detected_results, columns=["Metric", "In picture (%)", "Area (cm²)"])
+                            st.dataframe(results_df)
+
+                        st.balloons()
 
                 except Exception as ex:
                     st.error("Error occurred during waste detection.")
